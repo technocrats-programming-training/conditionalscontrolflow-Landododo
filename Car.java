@@ -8,10 +8,10 @@ public class Car {
     double currentGasAmount;
 
     public Car(String model, double mpg, double gasTankCapacity) {
-        this.model = model;
-        this.mpg = mpg;
-        this.gasTankCapacity = gasTankCapacity;
-        this.currentGasAmount = 0;
+      this.currentGasAmount = 0;
+      this.model = model;
+      this.gasTankCapacity=gasTankCapacity;
+      this.mpg = mpg;
     }
 
     public static void main(String[] args) {
@@ -23,6 +23,16 @@ public class Car {
         double mpg = sc.nextDouble();
         System.out.print("Gas Tank Capacity: ");
         double gasTankCapacity = sc.nextDouble();
+        if (gasTankCapacity<0||mpg<0){
+          if (mpg<0){
+            mpg=12;
+            System.out.println("mpg cannot be negative, setting to default value 25");
+          }
+          if (gasTankCapacity<0){
+            gasTankCapacity=25;
+            System.out.println("gasTankCapacity cannot be negative, setting to default value 12");
+          }
+        }
         Car car = new Car(model, mpg, gasTankCapacity);
 
         // Refuel the car to its maximum gas capacity
@@ -52,12 +62,24 @@ public class Car {
 
     public void drive(double distance) {
         // drive for distance (in miles), and update gas tank level accordingly (using mpg)
-        currentGasAmount -= distance / mpg;
+        if (currentGasAmount-distance/mpg<0){
+          distance=currentGasAmount*mpg;
+          System.out.println("The car ran out of gas after driving "+distance+" miles");
+          currentGasAmount=0;
+        }else{
+          currentGasAmount -= distance / mpg;
+        }
     }
 
     public void refuel(double gasAmount) {
         // Add gasAmount of gas to the gas tank
-        currentGasAmount += gasAmount;
+        if (currentGasAmount+gasAmount>gasTankCapacity){
+          gasAmount=gasTankCapacity-currentGasAmount;
+          System.out.println("The gas tank ran out of space, only "+gasAmount+" gallons of gas were added");
+          currentGasAmount+=gasAmount;
+        }else{
+          currentGasAmount += gasAmount;
+        }
     }
 
     public double getGasRemaining() {
